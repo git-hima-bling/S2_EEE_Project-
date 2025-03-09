@@ -1,0 +1,136 @@
+body {
+  font-family: 'Poppins', sans-serif;
+  margin: 0;
+  padding: 0;
+  background: #0d1b2a;
+  color: white;
+  text-align: center;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  min-height: 100vh;
+}
+
+.dashboard {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  width: 100%;
+}
+
+.container {
+  background: #1b263b;
+  padding: 30px;
+  border-radius: 15px;
+  box-shadow: 0px 10px 20px rgba(0, 0, 0, 0.5);
+  width: 90%;
+  max-width: 1100px;
+  text-align: center;
+  animation: fadeInUp 1s ease-in-out;
+  border: 2px solid rgba(255, 255, 255, 0.2);
+}
+
+.header {
+  font-size: 28px;
+  font-weight: bold;
+  padding: 15px;
+  background: rgba(255, 255, 255, 0.1);
+  border-radius: 10px;
+  margin-bottom: 20px;
+  box-shadow: 0px 4px 8px rgba(255, 255, 255, 0.2);
+}
+
+.grid-container {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 20px;
+}
+
+.card {
+  background: rgba(255, 255, 255, 0.1);
+  padding: 20px;
+  border-radius: 10px;
+  box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.3);
+  text-align: center;
+  animation: fadeIn 1s ease-in-out;
+}
+
+.fault-box {
+  padding: 20px;
+  background: linear-gradient(135deg, #ff512f, #dd2476);
+  color: white;
+  font-size: 26px;
+  font-weight: bold;
+  border-radius: 10px;
+  display: inline-block;
+  box-shadow: 0px 5px 10px rgba(255, 0, 0, 0.5);
+}
+
+.refresh-btn {
+  background: linear-gradient(135deg, #00c6ff, #0072ff);
+  color: white;
+  padding: 14px 35px;
+  border: none;
+  border-radius: 12px;
+  cursor: pointer;
+  font-size: 20px;
+  font-weight: bold;
+  transition: all 0.3s ease-in-out;
+  box-shadow: 0px 6px 12px rgba(0, 255, 255, 0.4);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 10px;
+}
+
+.refresh-btn:hover {
+  background: linear-gradient(135deg, #0072ff, #00c6ff);
+  transform: scale(1.1);
+}
+
+.alert-section {
+  margin-top: 20px;
+}
+
+.alert-box {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 15px;
+  padding: 20px;
+  background: linear-gradient(135deg, #ffcc00, #ff9900);
+  color: black;
+  font-size: 22px;
+  font-weight: bold;
+  border-radius: 15px;
+  box-shadow: 0px 7px 15px rgba(255, 165, 0, 0.6);
+  animation: shakeEffect 1s infinite alternate;
+}
+
+.alert-box img {
+  width: 50px;
+  height: 50px;
+}
+
+.graph-section {
+  padding: 20px;
+  background: rgba(0, 0, 0, 0.3);
+  border-radius: 15px;
+  box-shadow: 0px 6px 15px rgba(0, 0, 0, 0.5);
+  animation: fadeIn 1.5s ease-in-out;
+}
+
+@keyframes fadeInUp {
+  from { opacity: 0; transform: translateY(30px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+@keyframes fadeIn {
+  from { opacity: 0; }
+  to { opacity: 1; }
+}
+
+@keyframes shakeEffect {
+  from { transform: rotate(-2deg); }
+  to { transform: rotate(2deg); }
+}
