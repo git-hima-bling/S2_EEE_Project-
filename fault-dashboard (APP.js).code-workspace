@@ -1,8 +1,81 @@
-{
-	"folders": [
-		{
-			"path": "../../fault-dashboard"
-		}
-	],
-	"settings": {}
+import React, { useState, useEffect } from "react";
+import { Line } from "react-chartjs-2";
+import {
+  Chart as ChartJS,
+  CategoryScale,
+  LinearScale,
+  PointElement,
+  LineElement,
+  Title,
+  Tooltip,
+  Legend,
+} from "chart.js";
+import "./App.css";
+
+// Register Chart.js components
+ChartJS.register(CategoryScale, LinearScale, PointElement, LineElement, Title, Tooltip, Legend);
+
+const generateRandomGraphData = () => {
+  return Array.from({ length: 10 }, (_, i) => ({
+    time: `T${i + 1}`,
+    intensity: Math.floor(Math.random() * 100),
+    voltage: Math.floor(Math.random() * 50) + 150,
+  }));
+};
+
+function App() {
+  const [detectedFault, setDetectedFault] = useState("LLG");
+  const [alertMessage, setAlertMessage] = useState("⚠️ Fault Detected: LLG Fault");
+  const [voltageDrop, setVoltageDrop] = useState("220 kV → 170 kV");
+  const [actionRequired, setActionRequired] = useState("Dispatch maintenance team");
+  const [graphData, setGraphData] = useState(generateRandomGraphData());
+
+  const chartData = {
+    labels: graphData.map((d) => d.time),
+    datasets: [
+      {
+        label: "Fault Intensity",
+        data: graphData.map((d) => d.intensity),
+        borderColor: "#ffcc00",
+        backgroundColor: "rgba(255, 204, 0, 0.2)",
+        fill: true,
+      },
+      {
+        label: "Voltage Fault (V)",
+        data: graphData.map((d) => d.voltage),
+        borderColor: "#36A2EB",
+        backgroundColor: "rgba(54, 162, 235, 0.2)",
+        fill: true,
+      },
+    ],
+  };
+
+  return (
+    <div className="dashboard">
+      <div className="container">
+        <div className="header">Power System Fault Detection</div>
+        <div className="grid-container">
+          <div className="card">
+            <h2>Current Fault Detected</h2>
+            <div className="fault-box">{detectedFault}</div>
+          </div>
+          <div className="card graph-section">
+            <h2>Fault & Voltage Analysis</h2>
+            <Line data={chartData} />
+          </div>
+        </div>
+        <div className="alert-section">
+          <h2>System Alert</h2>
+          <div className="alert-box">
+            <img src="/electrician-pic.webp" alt="Electrician Dispatch" onError={(e) => e.target.style.display = 'none'} />
+            <p>{alertMessage}</p>
+            <p><strong>🔋 Voltage Drop:</strong> {voltageDrop}</p>
+            <p><strong>🛠 Action Required:</strong> {actionRequired}</p>
+          </div>
+        </div>
+      </div>
+    </div>
+  );
 }
+
+export default App;
