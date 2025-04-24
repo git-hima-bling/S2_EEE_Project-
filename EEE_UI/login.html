@@ -1,0 +1,304 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Interactive Experience</title>
+  <style>
+    body {
+      margin: 0;
+      padding: 0;
+      font-family: 'Arial', sans-serif;
+      background: linear-gradient(135deg, #f5d9ff, #d9e4ff);
+      height: 100vh;
+      overflow: hidden;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+    }
+
+    .game-container {
+      position: relative;
+      width: 600px;
+      height: 400px;
+      background-color: rgba(255, 255, 255, 0.8);
+      border-radius: 20px;
+      box-shadow: 0 10px 25px rgba(0, 0, 0, 0.2);
+      overflow: hidden;
+      border: 1px solid rgba(255, 255, 255, 0.5);
+      backdrop-filter: blur(5px);
+    }
+
+    .title {
+      position: absolute;
+      top: 15px;
+      width: 100%;
+      text-align: center;
+      font-size: 24px;
+      font-weight: bold;
+      color: transparent;
+      background: linear-gradient(to right, #ff6b6b, #6b5bff);
+      -webkit-background-clip: text;
+      background-clip: text;
+      z-index: 5;
+    }
+
+    .character {
+      position: absolute;
+      width: 60px;
+      height: 80px;
+      bottom: 50px;
+      left: 270px;
+      transition: left 0.3s ease;
+      z-index: 10;
+    }
+
+    .character img {
+      width: 100%;
+      height: 100%;
+      object-fit: contain;
+    }
+
+    .controls {
+      position: absolute;
+      bottom: 15px;
+      width: 100%;
+      display: flex;
+      justify-content: center;
+      gap: 15px;
+      z-index: 20;
+    }
+
+    .control-btn {
+      padding: 10px 20px;
+      border: none;
+      border-radius: 25px;
+      background: linear-gradient(to right, #ff9ff3, #a29bfe);
+      color: white;
+      font-weight: bold;
+      cursor: pointer;
+      box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+      transition: all 0.3s ease;
+    }
+
+    .control-btn:hover {
+      transform: translateY(-3px);
+      box-shadow: 0 6px 12px rgba(0, 0, 0, 0.3);
+    }
+
+    .control-btn:active {
+      transform: translateY(-1px);
+    }
+
+    .decoration {
+      position: absolute;
+      opacity: 0.6;
+      animation: float 4s infinite ease-in-out;
+      z-index: 1;
+    }
+
+    @keyframes float {
+      0%, 100% { transform: translateY(0) rotate(0deg); }
+      50% { transform: translateY(-20px) rotate(5deg); }
+    }
+
+    .jump {
+      animation: jump 0.5s ease;
+    }
+
+    @keyframes jump {
+      0%, 100% { transform: translateY(0); }
+      50% { transform: translateY(-100px); }
+    }
+
+    .message-bubble {
+      position: absolute;
+      top: 80px;
+      right: 50px;
+      background-color: rgba(255, 255, 255, 0.8);
+      border-radius: 15px;
+      padding: 10px 15px;
+      box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+      border: 1px solid #e4c1f9;
+      font-size: 14px;
+      color: #6b5bff;
+      max-width: 200px;
+      z-index: 5;
+      animation: pulse 2s infinite ease-in-out;
+    }
+
+    @keyframes pulse {
+      0%, 100% { opacity: 1; }
+      50% { opacity: 0.7; }
+    }
+
+    .logout-btn {
+      position: absolute;
+      top: 15px;
+      right: 15px;
+      padding: 6px 12px;
+      border: none;
+      border-radius: 15px;
+      background-color: rgba(255, 159, 243, 0.7);
+      color: white;
+      font-size: 12px;
+      cursor: pointer;
+      transition: all 0.2s ease;
+      z-index: 20;
+    }
+
+    .logout-btn:hover {
+      background-color: rgba(255, 107, 107, 0.9);
+    }
+
+    /* Added transition for page changes */
+    .page-transition {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background-color: #6b5bff;
+      z-index: 100;
+      opacity: 0;
+      pointer-events: none;
+      transition: opacity 0.5s ease;
+    }
+  </style>
+</head>
+<body>
+  <div class="page-transition" id="pageTransition"></div>
+  
+  <div class="game-container">
+    <!-- Title -->
+    <div class="title">Interactive Experience</div>
+    
+    <!-- Message Bubble -->
+    <div class="message-bubble">
+      Jump to navigate to Fault Detection or move to explore!
+    </div>
+    
+    <!-- Logout Button -->
+    <button class="logout-btn" id="logout-btn">Logout</button>
+    
+    <!-- Decorative elements with varied animation delays -->
+    <div class="decoration" style="top: 20%; left: 10%; font-size: 24px; color: #ff9ff3; animation-delay: 0s;">★</div>
+    <div class="decoration" style="top: 30%; right: 15%; font-size: 24px; color: #a29bfe; animation-delay: 0.5s;">❤</div>
+    <div class="decoration" style="top: 70%; left: 15%; font-size: 24px; color: #74b9ff; animation-delay: 1s;">✦</div>
+    <div class="decoration" style="top: 60%; right: 10%; font-size: 24px; color: #ff9ff3; animation-delay: 1.5s;">❀</div>
+    <div class="decoration" style="top: 40%; left: 20%; font-size: 24px; color: #74b9ff; animation-delay: 2s;">✧</div>
+    <div class="decoration" style="top: 50%; right: 20%; font-size: 24px; color: #a29bfe; animation-delay: 2.5s;">♡</div>
+
+    <!-- Character -->
+    <div class="character" id="character">
+      <img src="https://cdn.pixabay.com/photo/2020/05/18/16/17/social-media-5187243_960_720.png" alt="Character">
+    </div>
+
+    <!-- Controls -->
+    <div class="controls">
+      <button class="control-btn" id="left-btn">← Move Left</button>
+      <button class="control-btn" id="jump-btn">Jump!</button>
+      <button class="control-btn" id="right-btn">Move Right →</button>
+    </div>
+  </div>
+
+  <script>
+    const character = document.getElementById('character');
+    const leftBtn = document.getElementById('left-btn');
+    const rightBtn = document.getElementById('right-btn');
+    const jumpBtn = document.getElementById('jump-btn');
+    const logoutBtn = document.getElementById('logout-btn');
+    const pageTransition = document.getElementById('pageTransition');
+
+    let characterPosition = 270;
+    let isJumping = false;
+    
+    // Check if user is logged in (simple check)
+    function checkLogin() {
+      // In a real application, you would use cookies, localStorage, or a server session
+      // This is just a simple redirect if no login has occurred
+      const referrer = document.referrer;
+      if (!referrer.includes('login.html')) {
+        // If not coming from login page, redirect to login
+        window.location.href = 'login.html';
+      }
+    }
+    
+    // Run login check when page loads
+    window.addEventListener('load', checkLogin);
+
+    leftBtn.addEventListener('click', () => {
+      if (isJumping) return;
+      
+      if (characterPosition > 10) {
+        characterPosition -= 40;
+        character.style.left = characterPosition + 'px';
+        playMovementEffect();
+      }
+    });
+
+    rightBtn.addEventListener('click', () => {
+      if (isJumping) return;
+      
+      if (characterPosition < 510) {
+        characterPosition += 40;
+        character.style.left = characterPosition + 'px';
+        playMovementEffect();
+      }
+      
+      // If character reaches right edge, redirect to fault detection
+      if (characterPosition >= 490) {
+        setTimeout(() => {
+          showTransition();
+          setTimeout(() => {
+            window.location.href = "fault-detection.html"; // Change to your fault detection page
+          }, 500);
+        }, 300);
+      }
+    });
+
+    function playMovementEffect() {
+      character.style.transform = 'scale(1.1)';
+      setTimeout(() => {
+        character.style.transform = 'scale(1)';
+      }, 150);
+    }
+
+    jumpBtn.addEventListener('click', () => {
+      if (isJumping) return;
+      
+      isJumping = true;
+      character.classList.add('jump');
+      
+      setTimeout(() => {
+        character.classList.remove('jump');
+        isJumping = false;
+        
+        // Navigate to fault detection page
+        showTransition();
+        setTimeout(() => {
+          window.location.href = 'index.html'; // Change to your fault detection page
+        }, 500);
+      }, 500);
+    });
+    
+    logoutBtn.addEventListener('click', () => {
+      showTransition();
+      setTimeout(() => {
+        window.location.href = 'login.html';
+      }, 500);
+    });
+    
+    function showTransition() {
+      pageTransition.style.opacity = '1';
+    }
+    
+    // Add some floating animation to the character
+    setInterval(() => {
+      if (!isJumping) {
+        character.style.transform = `translateY(${Math.sin(Date.now() / 1000) * 3}px)`;
+      }
+    }, 50);
+  </script>
+</body>
+</html>

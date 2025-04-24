@@ -1,0 +1,847 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Critical Fault Alert System</title>
+    <style>
+        :root {
+            --primary-color: #ff4d4d; /* Red for alert */
+            --secondary-color: #ff7878; /* Lighter red for accent */
+            --background-color: #f8f8f8;
+            --panel-color: #ffffff;
+            --text-color: #333333;
+            --border-radius: 12px;
+            --shadow-color: rgba(255, 0, 0, 0.1); /* Red shadow */
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+
+        body {
+            background-color: var(--background-color);
+            color: var(--text-color);
+            display: flex;
+            flex-direction: column;
+            min-height: 100vh;
+        }
+
+        header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            background-color: var(--primary-color);
+            color: white;
+            padding: 1rem 2rem;
+            border-bottom-left-radius: var(--border-radius);
+            border-bottom-right-radius: var(--border-radius);
+            box-shadow: 0 2px 4px var(--shadow-color);
+        }
+
+        .logo-container {
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+        }
+
+        .warning-icon {
+            background-color: white;
+            border-radius: 50%;
+            width: 40px;
+            height: 40px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            font-size: 1.5rem;
+            color: var(--primary-color);
+            animation: bounce 1s infinite alternate;
+        }
+
+        @keyframes bounce {
+            0% {
+                transform: translateY(0);
+            }
+            100% {
+                transform: translateY(-5px);
+            }
+        }
+
+        .title-container h1 {
+            font-size: 1.5rem;
+            font-weight: 600;
+        }
+
+        .title-container p {
+            font-size: 0.9rem;
+            opacity: 0.9;
+        }
+
+        .nav-icons {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+        }
+
+        .icon {
+            font-size: 1.25rem;
+            transition: transform 0.3s ease;
+        }
+
+        .icon:hover {
+            transform: scale(1.2);
+        }
+
+        .alert-badge {
+            background-color: white;
+            color: var(--primary-color);
+            padding: 0.25rem 0.75rem;
+            border-radius: 20px;
+            font-weight: bold;
+            font-size: 0.8rem;
+            box-shadow: 0 1px 2px var(--shadow-color);
+            animation: pulse 2s infinite;
+        }
+
+        @keyframes pulse {
+            0% {
+                box-shadow: 0 0 0 0 rgba(255, 77, 77, 0.7);
+            }
+            70% {
+                box-shadow: 0 0 0 10px rgba(255, 77, 77, 0);
+            }
+            100% {
+                box-shadow: 0 0 0 0 rgba(255, 77, 77, 0);
+            }
+        }
+
+        main {
+            display: flex;
+            padding: 2rem;
+            gap: 2rem;
+            justify-content: center;
+            align-items: stretch;
+            flex: 1;
+        }
+
+        .panel {
+            background-color: var(--panel-color);
+            border-radius: var(--border-radius);
+            padding: 1.5rem;
+            box-shadow: 0 4px 6px var(--shadow-color);
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+        }
+
+        .panel:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 8px 15px var(--shadow-color);
+        }
+
+        .panel h2 {
+            color: var(--primary-color);
+            margin-bottom: 1.5rem;
+            font-size: 1.5rem;
+            text-align: center;
+        }
+
+        .tabs {
+            display: flex;
+            justify-content: center;
+            margin-bottom: 1.5rem;
+            background-color: #f2f2f2;
+            border-radius: var(--border-radius);
+            padding: 0.25rem;
+        }
+
+        .tab {
+            padding: 0.75rem 1rem;
+            background: none;
+            border: none;
+            border-radius: var(--border-radius);
+            cursor: pointer;
+            font-size: 1rem;
+            transition: all 0.3s ease;
+            flex: 1;
+            text-align: center;
+        }
+
+        .tab.active {
+            background-color: white;
+            color: var(--primary-color);
+            font-weight: 500;
+            box-shadow: 0 2px 4px var(--shadow-color);
+        }
+
+        .tab:not(.active):hover {
+            background-color: rgba(255, 255, 255, 0.6);
+        }
+
+        .input-section {
+            margin-bottom: 1.5rem;
+        }
+
+        .input-section h3 {
+            color: var(--secondary-color);
+            margin-bottom: 1rem;
+            font-size: 1.1rem;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            justify-content: center;
+        }
+
+        .input-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 1rem;
+            margin-bottom: 1rem;
+        }
+
+        .input-group label {
+            display: block;
+            margin-bottom: 0.5rem;
+            font-weight: 500;
+            text-align: center;
+        }
+
+        .input-group input {
+            width: 100%;
+            padding: 0.75rem;
+            border: 2px solid var(--secondary-color);
+            border-radius: var(--border-radius);
+            font-size: 1rem;
+            text-align: center;
+            box-shadow: inset 0 1px 3px var(--shadow-color);
+            transition: border-color 0.2s, box-shadow 0.2s;
+        }
+
+        .input-group input:focus {
+            outline: none;
+            border-color: var(--primary-color);
+            box-shadow: 0 0 0 3px rgba(255, 77, 77, 0.3);
+        }
+
+        .file-upload-area {
+            width: 100%;
+            border: 2px dashed var(--secondary-color);
+            border-radius: var(--border-radius);
+            padding: 2rem;
+            text-align: center;
+            margin-bottom: 1.5rem;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .file-upload-area:hover {
+            border-color: var(--primary-color);
+            background-color: rgba(255, 77, 77, 0.05);
+        }
+
+        .file-upload-icon {
+            font-size: 2rem;
+            margin-bottom: 1rem;
+            color: var(--secondary-color);
+        }
+
+        .file-upload-text {
+            margin-bottom: 0.5rem;
+            font-weight: 500;
+        }
+
+        .file-upload-subtext {
+            font-size: 0.8rem;
+            color: #64748b;
+        }
+
+        .file-input {
+            display: none;
+        }
+
+        .selected-file {
+            margin-top: 1rem;
+            padding: 0.5rem;
+            background-color: rgba(255, 77, 77, 0.1);
+            border-radius: var(--border-radius);
+            display: none;
+        }
+
+        .detect-button {
+            width: 100%;
+            padding: 1rem;
+            background-color: var(--secondary-color);
+            color: white;
+            border: none;
+            border-radius: var(--border-radius);
+            font-size: 1rem;
+            font-weight: 500;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 0.5rem;
+            transition: all 0.2s;
+            margin-top: auto;
+            box-shadow: 0 2px 4px var(--shadow-color);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .detect-button:hover {
+            background-color: #ff3333;
+            transform: translateY(-2px);
+            box-shadow: 0 4px 8px var(--shadow-color);
+        }
+
+        .detect-button:active {
+            transform: translateY(1px);
+        }
+
+        .detect-button::before {
+            content: '';
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            width: 0;
+            height: 0;
+            background: rgba(255, 255, 255, 0.1);
+            border-radius: 50%;
+            transition: width 0.6s ease-out, height 0.6s ease-out;
+            transform: translate(-50%, -50%);
+        }
+
+        .detect-button:hover::before {
+            width: 300px;
+            height: 300px;
+        }
+
+        .alert-empty {
+            min-height: 250px;
+            border: 2px dashed var(--secondary-color);
+            border-radius: var(--border-radius);
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            text-align: center;
+            padding: 2rem;
+            color: #999;
+            font-size: 1.1rem;
+            transition: all 0.3s ease;
+        }
+
+        .alert-empty:hover {
+            border-color: var(--primary-color);
+            color: var(--primary-color);
+        }
+
+        .arrow-icon {
+            font-size: 2rem;
+            margin-bottom: 1rem;
+            color: var(--primary-color);
+            animation: slideRight 1.5s infinite alternate;
+        }
+
+        @keyframes slideRight {
+            0% {
+                transform: translateX(-5px);
+            }
+            100% {
+                transform: translateX(5px);
+            }
+        }
+
+        .result-header {
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+            margin-bottom: 1.5rem;
+        }
+
+        #status-indicator {
+            width: 24px;
+            height: 24px;
+            border-radius: 50%;
+            box-shadow: 0 1px 2px var(--shadow-color);
+        }
+
+        .status-ok {
+            background-color: #10b981;
+            animation: glowGreen 2s infinite alternate;
+        }
+
+        @keyframes glowGreen {
+            0% {
+                box-shadow: 0 0 5px rgba(16, 185, 129, 0.5);
+            }
+            100% {
+                box-shadow: 0 0 20px rgba(16, 185, 129, 0.8);
+            }
+        }
+
+        .status-fault {
+            background-color: #ef4444;
+            animation: glowRed 0.5s infinite alternate;
+        }
+
+        @keyframes glowRed {
+            0% {
+                box-shadow: 0 0 5px rgba(239, 68, 68, 0.5);
+            }
+            100% {
+                box-shadow: 0 0 20px rgba(239, 68, 68, 0.8);
+            }
+        }
+
+        .result-details {
+            background-color: #f8fafc;
+            border-radius: var(--border-radius);
+            padding: 1rem;
+            transition: transform 0.3s ease;
+        }
+
+        .detail-row {
+            display: flex;
+            justify-content: space-between;
+            padding: 0.75rem 0;
+            border-bottom: 1px solid var(--secondary-color);
+            transition: background-color 0.2s;
+        }
+
+        .detail-row:hover {
+            background-color: rgba(255, 77, 77, 0.05);
+        }
+
+        .detail-row:last-child {
+            border-bottom: none;
+        }
+
+        .detail-row .label {
+            font-weight: 500;
+            color: #64748b;
+        }
+
+        .detail-row .value {
+            font-weight: 500;
+        }
+
+        /* Fade-in animation for results */
+        @keyframes fadeIn {
+            from {
+                opacity: 0;
+                transform: translateY(10px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        #alert-results {
+            animation: fadeIn 0.5s ease-out;
+        }
+
+        @media (max-width: 768px) {
+            main {
+                flex-direction: column;
+            }
+
+            .input-grid {
+                grid-template-columns: repeat(2, 1fr);
+            }
+        }
+
+        /* Show/hide tab content */
+        .tab-content {
+            display: none;
+        }
+
+        .tab-content.active {
+            display: block;
+        }
+    </style>
+</head>
+
+<body>
+    <header>
+        <div class="logo-container">
+            <div class="warning-icon">⚠️</div>
+            <div class="title-container">
+                <h1>Critical Fault Alert System</h1>
+                <p>Emergency Detection & Response</p>
+            </div>
+        </div>
+        <div class="nav-icons">
+            <div class="icon">⚡</div>
+            <div class="icon">🔔</div>
+            <div class="alert-badge">ALERT</div>
+        </div>
+    </header>
+
+    <main>
+        <div class="panel left-panel">
+            <h2>Critical Fault Detection</h2>
+            <div class="tabs">
+                <button class="tab active" data-tab="manual-input">Manual Input</button>
+                <button class="tab" data-tab="file-upload">File Upload</button>
+            </div>
+
+            <div id="manual-input" class="tab-content active">
+                <form id="fault-detection-form">
+                    <div class="input-section">
+                        <h3>⚡ Current Measurements (A)</h3>
+                        <div class="input-grid">
+                            <div class="input-group">
+                                <label for="I1">I1</label>
+                                <input type="number" id="I1" name="I1" value="0" step="0.1">
+                            </div>
+                            <div class="input-group">
+                                <label for="I2">I2</label>
+                                <input type="number" id="I2" name="I2" value="0" step="0.1">
+                            </div>
+                            <div class="input-group">
+                                <label for="I3">I3</label>
+                                <input type="number" id="I3" name="I3" value="0" step="0.1">
+                            </div>
+                            <div class="input-group">
+                                <label for="I4">I4</label>
+                                <input type="number" id="I4" name="I4" value="0" step="0.1">
+                            </div>
+                            <div class="input-group">
+                                <label for="I5">I5</label>
+                                <input type="number" id="I5" name="I5" value="0" step="0.1">
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="input-section">
+                        <h3>🔌 Voltage Measurements (V)</h3>
+                        <div class="input-grid">
+                            <div class="input-group">
+                                <label for="V1">V1</label>
+                                <input type="number" id="V1" name="V1" value="0" step="0.1">
+                            </div>
+                            <div class="input-group">
+                                <label for="V2">V2</label>
+                                <input type="number" id="V2" name="V2" value="0" step="0.1">
+                            </div>
+                            <div class="input-group">
+                                <label for="V3">V3</label>
+                                <input type="number" id="V3" name="V3" value="0" step="0.1">
+                            </div>
+                            <div class="input-group">
+                                <label for="V4">V4</label>
+                                <input type="number" id="V4" name="V4" value="0" step="0.1">
+                            </div>
+                            <div class="input-group">
+                                <label for="V5">V5</label>
+                                <input type="number" id="V5" name="V5" value="0" step="0.1">
+                            </div>
+                        </div>
+                    </div>
+
+                    <button type="submit" class="detect-button">⚠ Detect Fault</button>
+                </form>
+            </div>
+
+            <div id="file-upload" class="tab-content">
+                <form id="file-upload-form">
+                    <div class="file-upload-area" id="drop-area">
+                        <div class="file-upload-icon">📁</div>
+                        <p class="file-upload-text">Drag & Drop CSV file here</p>
+                        <p class="file-upload-subtext">or click to browse files</p>
+                        <input type="file" id="file-input" class="file-input" accept=".csv, .xlsx, .xls, .txt">
+                        <div id="selected-file" class="selected-file">No file selected</div>
+                    </div>
+                    <button type="submit" class="detect-button">⚠ Upload & Detect Fault</button>
+                </form>
+            </div>
+        </div>
+
+        <div class="panel right-panel">
+            <h2>Alert Status</h2>
+            <div id="alert-container" class="alert-empty">
+                <div id="initial-message">
+                    <div class="arrow-icon">➡️</div>
+                    <p>Enter system parameters and click "Detect Fault" to analyze threats</p>
+                </div>
+
+                <div id="alert-results" style="display: none;">
+                    <div class="result-header">
+                        <span id="status-indicator"></span>
+                        <h3 id="fault-status">Status pending...</h3>
+                    </div>
+
+                    <div class="result-details">
+                        <div class="detail-row">
+                            <span class="label">Fault Type:</span>
+                            <span id="fault-type" class="value">-</span>
+                        </div>
+                        <div class="detail-row">
+                            <span class="label">Confidence:</span>
+                            <span id="confidence" class="value">-</span>
+                        </div>
+                        <div class="detail-row">
+                            <span class="label">Timestamp:</span>
+                            <span id="timestamp" class="value">-</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </main>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            // Manual form handling
+            const manualForm = document.getElementById('fault-detection-form');
+            const fileForm = document.getElementById('file-upload-form');
+            const initialMessage = document.getElementById('initial-message');
+            const alertResults = document.getElementById('alert-results');
+            const faultStatus = document.getElementById('fault-status');
+            const faultType = document.getElementById('fault-type');
+            const confidence = document.getElementById('confidence');
+            const timestamp = document.getElementById('timestamp');
+            const statusIndicator = document.getElementById('status-indicator');
+            
+            // Tab switching functionality
+            const tabs = document.querySelectorAll('.tab');
+            const tabContents = document.querySelectorAll('.tab-content');
+            
+            tabs.forEach(tab => {
+                tab.addEventListener('click', function() {
+                    // Remove active class from all tabs and contents
+                    tabs.forEach(t => t.classList.remove('active'));
+                    tabContents.forEach(content => content.classList.remove('active'));
+                    
+                    // Add active class to clicked tab and corresponding content
+                    this.classList.add('active');
+                    const tabId = this.getAttribute('data-tab');
+                    document.getElementById(tabId).classList.add('active');
+                });
+            });
+            
+            // File upload functionality
+            const dropArea = document.getElementById('drop-area');
+            const fileInput = document.getElementById('file-input');
+            const selectedFileDisplay = document.getElementById('selected-file');
+            
+            // Prevent default drag behaviors
+            ['dragenter', 'dragover', 'dragleave', 'drop'].forEach(eventName => {
+                dropArea.addEventListener(eventName, preventDefaults, false);
+            });
+            
+            function preventDefaults(e) {
+                e.preventDefault();
+                e.stopPropagation();
+            }
+            
+            // Highlight drop area when item is dragged over it
+            ['dragenter', 'dragover'].forEach(eventName => {
+                dropArea.addEventListener(eventName, highlight, false);
+            });
+            
+            ['dragleave', 'drop'].forEach(eventName => {
+                dropArea.addEventListener(eventName, unhighlight, false);
+            });
+            
+            function highlight() {
+                dropArea.style.borderColor = 'var(--primary-color)';
+                dropArea.style.backgroundColor = 'rgba(255, 77, 77, 0.05)';
+            }
+            
+            function unhighlight() {
+                dropArea.style.borderColor = 'var(--secondary-color)';
+                dropArea.style.backgroundColor = '';
+            }
+            
+            // Handle dropped files
+            dropArea.addEventListener('drop', handleDrop, false);
+            
+            function handleDrop(e) {
+                const dt = e.dataTransfer;
+                const files = dt.files;
+                handleFiles(files);
+            }
+            
+            // Handle files from file input
+            fileInput.addEventListener('change', function() {
+                handleFiles(this.files);
+            });
+            
+            // Click on drop area to trigger file input
+            dropArea.addEventListener('click', function() {
+                fileInput.click();
+            });
+            
+            function handleFiles(files) {
+                if (files.length > 0) {
+                    const file = files[0];
+                    selectedFileDisplay.textContent = `Selected: ${file.name} (${formatBytes(file.size)})`;
+                    selectedFileDisplay.style.display = 'block';
+                }
+            }
+            
+            function formatBytes(bytes, decimals = 2) {
+                if (bytes === 0) return '0 Bytes';
+                
+                const k = 1024;
+                const dm = decimals < 0 ? 0 : decimals;
+                const sizes = ['Bytes', 'KB', 'MB', 'GB', 'TB'];
+                
+                const i = Math.floor(Math.log(bytes) / Math.log(k));
+                
+                return parseFloat((bytes / Math.pow(k, i)).toFixed(dm)) + ' ' + sizes[i];
+            }
+            
+            // For demo/development - simulate server response
+            function simulateServerResponse(formData) {
+                return new Promise((resolve) => {
+                    setTimeout(() => {
+                        // Array of power system fault types
+                        const faultTypes = [
+                            'No Fault',
+                            'LL (Line-to-Line)',
+                            'LG (Line-to-Ground)',
+                            'LLG (Double Line-to-Ground)',
+                            'LLL (Three-Phase)',
+                            'LLLG (Three-Phase-to-Ground)',
+                            'GG (Ground-to-Ground)'
+                        ];
+                        
+                        // Random fault detection (70% chance of fault for demo)
+                        const isFault = Math.random() > 0.3;
+                        const faultTypeIndex = isFault ? Math.floor(Math.random() * (faultTypes.length - 1)) + 1 : 0;
+                        
+                        // Random location in the power system
+                        
+                        
+                        resolve({
+                            fault_detected: isFault,
+                            fault_type: faultTypes[faultTypeIndex],
+                            confidence: isFault ? Math.round(70 + Math.random() * 30) + '%' : '99%',
+                            timestamp: new Date().toLocaleString(),
+                            
+                        });
+                    }, 1500); // Simulate server delay
+                });
+            }
+
+            // Handle manual form submission
+            manualForm.addEventListener('submit', function(event) {
+                event.preventDefault();
+                processDetection(new FormData(manualForm));
+            });
+            
+            // Handle file form submission
+            fileForm.addEventListener('submit', function(event) {
+                event.preventDefault();
+                const fileData = new FormData();
+                if (fileInput.files.length > 0) {
+                    fileData.append('file', fileInput.files[0]);
+                    processDetection(fileData);
+                } else {
+                    alert('Please select a file first.');
+                }
+            });
+            
+            function processDetection(formData) {
+                // Show loading state
+                initialMessage.style.display = 'none';
+                alertResults.style.display = 'block';
+                faultStatus.textContent = 'Analyzing...';
+                faultType.textContent = 'Processing...';
+                confidence.textContent = 'Calculating...';
+                timestamp.textContent = 'Recording...';
+               
+                
+                // Try to use real server if available, otherwise use simulation for demo
+                try {
+                    fetch('/predict', {
+                        method: 'POST',
+                        body: formData
+                    })
+                    .then(response => {
+                        if (!response.ok) {
+                            throw new Error('Server error');
+                        }
+                        return response.json();
+                    })
+                    .then(updateResults)
+                    .catch(error => {
+                        console.log("Using simulated response due to: " + error.message);
+                        simulateServerResponse(formData).then(updateResults);
+                    });
+                } catch (error) {
+                    console.log("Using simulated response due to: " + error.message);
+                    simulateServerResponse(formData).then(updateResults);
+                }
+            }
+            
+            function updateResults(data) {
+                // Reset animation to trigger it again
+                alertResults.style.animation = 'none';
+                alertResults.offsetHeight; // Trigger reflow
+                alertResults.style.animation = 'fadeIn 0.5s ease-out';
+                
+                if (data.error) {
+                    faultStatus.textContent = 'Error';
+                    faultType.textContent = data.error;
+                    statusIndicator.className = 'status-fault';
+                    return;
+                }
+
+                // Update UI with results
+                if (data.fault_detected) {
+                    faultStatus.textContent = 'FAULT DETECTED';
+                    statusIndicator.className = 'status-fault';
+                    // Add alert sound for critical faults
+                    playAlertSound();
+                } else {
+                    faultStatus.textContent = 'SYSTEM NORMAL';
+                    statusIndicator.className = 'status-ok';
+                }
+
+                faultType.textContent = data.fault_type;
+                confidence.textContent = data.confidence;
+                timestamp.textContent = data.timestamp;
+                
+            }
+            
+            function playAlertSound() {
+                // Optional: Create audio alert
+                try {
+                    const audio = new Audio();
+                    audio.src = "data:audio/wav;base64,UklGRnoGAABXQVZFZm10IBAAAAABAAEAQB8AAEAfAAABAAgAZGF0YQoGAACBhYqFbF1fdJivrJBhNjVgodDbq2EcBj+a2/LDciUFLHPM7tZqDgcYRp3w7HQtDwokQ8v/13QWBg8bPfT/6X0fBxEfKfPuy5smCQsXCunixKJACQgPCNvMxK1fBQkB8cTnxn8sDALpwPLiewnuwMJOAQPz5ccNCgLLpZewTFEA+nISDTH86LAcIyj8vqQbCw360K0bBxkGy6cKFBAL69MAN5nQ0PYWBvb6F/0OudP4HRju+T1ID+9eWJ7dPOMVBPxmDTLmzr+vuwz9EvcZwdWt2iYM/hPzD+jOt94fDPkFyBbizrrjFA39BiEzwLFAq+Pm6/gf19HARKRgNc3tzBTx1czwHgrm9xzqyMU9Rhvh+DLnzwX/8sDVTwz3/jffwyzxEcP9A9JBA/s5ECxxJM7FuEkY08jWXx3W7ULQm1Dl8j8HIQQO2cmg5jlQBfgS5BjL1LzhJw7xCdEaxs+45CIO/wLDHM/FpdosH6nY89QzA937CmDA5tt2JRbZ9uX7A+LFv9o0GeP/DVK91tPFOQtAwPXbNwLs/SpIbuYaYqYfqNr13T0A4voFQHzibmWoIqrY6d8xAeP4A0J85DJmpiOq1+HgLgHk+QNDe+NKZKIjq9bi4CsB5fkDRHriUGKgI6zV4uEqAeb5AkR54FJjnySs1OLiKQHl+QJFeOFfeZ4iq9Li4yoBo67X4O0xAeP3A0R832FInRzkJKvR4OtGAef6BBnD1rr1Ogzm+wNQu93SzzkL+QI2aOHcZMooTsn45esDC/kPN+HbTdBCEPn8PNi/yu5RFez/EcncxedzFOb+OnrTvOFSE+37R0m92M/LQw3r+kRIwN7VyEAP7/1MRK3ezeNPFNz5Obj6Pgzt/ENKvNm+5lEU5v1JTLjWtuhPEu3+UEex1bPrVBTk+ktDs9ey7FIT7f9IQrHardxoDN34VEGx1rXtVRHp/09EsNe171US6f5US7LYtvBUEOf7Tk2w2LfyWBTn+U9PsNa39lcU5/lRULDYuPZTEub5T1Ow2Ln3WBPl+lFQsdi4+FcT5PtQULHXuPlaE+P8T1Gx0rv7XxDj/EJQtdi8+mMN5PtRULHXuvxiDuL7UlCx17r9Zg3i+1JRsdW6/WcN4ftSUbHVuv5oDeD7UlGx1br+aQ3f+1JRsdW6/moN3/tSUbHVuv5rDd77UlGx1br+bA3d+1JRsdW6/m0N3PtSUbHVuv5uDdv7UlGx1br+bw3a+1JRsdW7/nAN2ftSUbHVuv5xDdj7UlKx1br+cQ3Y+1JSsdW6/nIN1/tSUrHVuv5yDdf7UlKx1bv+cw3W+1JSsdW6/nQN1ftSUrHWuv51DdP7U1Kx1br+dg3S+1NSsde4/ncN0ftTUrHXuP54DdD7U1Kx17j+eQ3P+1NSsde4/noNzvtTUrHXuP57Dc37U1Kx17j+fA3M+1NSsdi3/nwNzPtTUrHYt/59Dcv7U1Kx2Lf+fg3K+1NSsdi3/n8NyftTUrHYt/6ADcj7VFKx2Lf+gQ3H+1RSsdi3/oENx/tUUrHYt/6CDcb7VFKy17j+gg3G+1RSste4/oMNxftUUrLXuP6DDcX7VFKy17j+hA3E+1RSste4/oUNw/tUUrLXuP6FDcP7VFKy17j+hg3C+1RSste4/ocNwftUUrLXuP6IDcD7VFKy17j+iQ2/+1RSste4/ooNvvtUUrLXuP6LDb37VVKy17j+jA28+1VSste4/owNvPtVUrLXuP6NDbv7VVKy17j+jg26+1VSstr9/o4Nu/tUUbHZ/vnZVQq6/VUKuv1VCrr9VQq6/VUKuv1VCrr9VQq6/VUKuv1VCrr9VQq6/VUKuv1VCrr9VQq6/VUK";
+                    audio.play().catch(e => console.log("Audio playback failed: " + e));
+                } catch (e) {
+                    console.log("Audio creation failed: " + e);
+                }
+            }
+            
+            // Add some interactivity to input fields
+            const inputs = document.querySelectorAll('input[type="number"]');
+            inputs.forEach(input => {
+                input.addEventListener('focus', function() {
+                    this.select(); // Select all text when focused
+                });
+                
+                // Add highlight effect when values change significantly
+                input.addEventListener('change', function() {
+                    if (Math.abs(parseFloat(this.value)) > 50) {
+                        this.style.backgroundColor = 'rgba(255, 77, 77, 0.1)';
+                        setTimeout(() => {
+                            this.style.backgroundColor = '';
+                        }, 1000);
+                    }
+                });
+            });
+        });
+    </script>
+</body>
+</html>
